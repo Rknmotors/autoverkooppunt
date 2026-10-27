@@ -1,0 +1,25 @@
+{
+  "name": "avp-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Autoverkooppunt (AVP) — publieke website, Next.js-versie voor GoDaddy Node.js Hosting",
+  "main": "next.config.mjs",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production next build",
+    "start": "NODE_ENV=production next start",
+    "dev": "next dev",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "next": "15.5.28",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "typescript": "5.9.3"
+  }
+}
