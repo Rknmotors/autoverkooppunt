@@ -7,8 +7,8 @@ import { PHONE_DISPLAY, PHONE_TEL, WA_URL } from '@/lib/contact';
 const FUELS = ['Benzine', 'Diesel', 'Hybride', 'Elektrisch', 'LPG / CNG'];
 const POSTCODE_EXAMPLES = ['bv. 2000 Antwerpen', 'bv. 1000 Brussel', 'bv. 9000 Gent'];
 
-type Values = { merk: string; jaar: string; km: string; brandstof: string; naam: string; tel: string; postcode: string };
-const EMPTY: Values = { merk: '', jaar: '', km: '', brandstof: FUELS[0], naam: '', tel: '', postcode: '' };
+type Values = { merk: string; jaar: string; km: string; brandstof: string; prijs: string; naam: string; tel: string; postcode: string };
+const EMPTY: Values = { merk: '', jaar: '', km: '', brandstof: FUELS[0], prijs: '', naam: '', tel: '', postcode: '' };
 
 /** Zelfde berichtopbouw als het originele script. encodeURIComponent zorgt voor correcte speciale tekens. */
 export function buildWhatsAppMessage(v: Values) {
@@ -19,6 +19,7 @@ export function buildWhatsAppMessage(v: Values) {
     '\nBouwjaar: ' + (t(v.jaar) || '-') +
     '\nKm-stand: ' + (t(v.km) || '-') +
     '\nBrandstof: ' + t(v.brandstof) +
+    '\nRichtprijs: € ' + t(v.prijs) +
     '\n\nNaam: ' + t(v.naam) +
     '\nTelefoon: ' + t(v.tel) +
     '\nPostcode: ' + (t(v.postcode) || '-')
@@ -28,6 +29,7 @@ export function buildWhatsAppMessage(v: Values) {
 export function validate(v: Values) {
   const miss: string[] = [];
   if (!v.merk.trim()) miss.push('merk en model');
+  if (!v.prijs.replace(/\D/g, '')) miss.push('je richtprijs');
   if (!v.naam.trim()) miss.push('naam');
   if (v.tel.trim().replace(/\D/g, '').length < 9) miss.push('een geldig telefoonnummer');
   return miss.length ? `Vul nog ${miss.join(', ')} in.` : null;
@@ -75,6 +77,11 @@ export default function OfferCard() {
   function onKm(e: { target: { value: string } }) {
     const d = e.target.value.replace(/\D/g, '');
     setV((p) => ({ ...p, km: d ? Number(d).toLocaleString('nl-BE') : '' }));
+  }
+
+  function onPrice(e: { target: { value: string } }) {
+    const d = e.target.value.replace(/\D/g, '').slice(0, 7);
+    setV((p) => ({ ...p, prijs: d ? Number(d).toLocaleString('nl-BE') : '' }));
   }
 
   function onSubmit(e: FormEvent) {
@@ -125,6 +132,7 @@ export default function OfferCard() {
               </select>
             </div>
           </div>
+          <div className="field"><label htmlFor="prijs">Jouw richtprijs</label><div className="money"><span aria-hidden="true">€</span><input id="prijs" name="prijs" inputMode="numeric" placeholder="bv. 8 500" aria-describedby="prijs-hint" required value={v.prijs} onChange={onPrice} /></div><p className="small" id="prijs-hint">Welk bedrag heb je zelf in gedachten?</p></div>
           <p className="step-label">Jouw gegevens</p>
           <div className="row2">
             <div className="field"><label htmlFor="naam">Naam</label><input id="naam" name="naam" autoComplete="name" placeholder="Voor- en achternaam" required value={v.naam} onChange={set('naam')} /></div>

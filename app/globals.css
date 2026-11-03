@@ -312,3 +312,8 @@ footer .legal{margin-top:44px;padding-top:20px;border-top:1px solid #26332A;disp
 
 /* Bugfix: .done{display:grid} overschreef het hidden-attribuut, waardoor het bevestigingsscherm altijd zichtbaar was. */
 [hidden]{display:none!important}
+
+/* Richtprijs-veld met euroteken */
+.money{position:relative}
+.money span{position:absolute;left:15px;top:50%;translate:0 -50%;font-weight:600;font-size:16px;color:var(--ink-2);pointer-events:none}
+.field .money input{padding-left:34px}
